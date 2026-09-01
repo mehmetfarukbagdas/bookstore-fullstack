@@ -234,20 +234,18 @@ export function Header() {
             </Link>
 
             {/* Sepet: doğrudan Link kullanılıyor; mobil/masaüstünde /sepet rotasına gider. */}
-            <Link href="/sepet" aria-label="Sepete git">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative group hover:bg-[#4a2e2b]/10 rounded-full text-gray-600 transition-all h-9 w-9 sm:h-10 sm:w-10"
-              >
-                <ShoppingCart className="h-5 w-5 group-hover:text-[#4a2e2b] transition-colors" />
+            <Link
+              href="/sepet"
+              aria-label="Sepete git"
+              className="relative group flex items-center justify-center hover:bg-[#4a2e2b]/10 rounded-full text-gray-600 transition-all h-9 w-9 sm:h-10 sm:w-10"
+            >
+              <ShoppingCart className="h-5 w-5 group-hover:text-[#4a2e2b] transition-colors" />
 
-                {cartItemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-[#4a2e2b] text-white text-xs flex items-center justify-center font-medium animate-in zoom-in">
-                    {cartItemCount}
-                  </span>
-                )}
-              </Button>
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-[#4a2e2b] text-white text-xs flex items-center justify-center font-medium animate-in zoom-in">
+                  {cartItemCount}
+                </span>
+              )}
             </Link>
 
             {isAuthenticated ? (
