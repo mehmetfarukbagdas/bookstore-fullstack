@@ -68,29 +68,47 @@ public class YorumController : ControllerBase
             return BadRequest("Geçersiz yorum verisi.");
 
         var kitapMevcutmu = await _context.Kitaplar.AnyAsync(k => k.Id == dto.BookId);
-        if (!kitapMevcutmu) return NotFound("Yorum yapılmak istenen kitap bulunamadı.");
+        if (!kitapMevcutmu)
+            return NotFound("Yorum yapılmak istenen kitap bulunamadı.");
+
+        if (dto.Rating < 1 || dto.Rating > 5)
+            return BadRequest("Lütfen 1 ile 5 arasında bir puan seçin.");
 
         var yeniYorum = new Yorum
         {
             KitapId = dto.BookId,
             KullaniciAd = string.IsNullOrWhiteSpace(dto.User) ? "Anonim Kullanıcı" : dto.User,
             Metin = dto.Text,
-            Puan = dto.Rating < 1 || dto.Rating > 5 ? 5 : dto.Rating,
+            Puan = dto.Rating,
             KayitTarihi = DateTime.UtcNow
         };
 
         _context.Yorumlar.Add(yeniYorum);
         await _context.SaveChangesAsync();
 
+        var ozet = await _context.Yorumlar
+            .Where(y => y.KitapId == dto.BookId)
+            .GroupBy(y => y.KitapId)
+            .Select(g => new
+            {
+                puan = g.Average(y => y.Puan),
+                yorumSayisi = g.Count()
+            })
+            .FirstOrDefaultAsync();
+
         return Ok(new
         {
             id = yeniYorum.Id,
             bookId = yeniYorum.KitapId,
             user = yeniYorum.KullaniciAd,
-            initials = yeniYorum.KullaniciAd.Substring(0, 1).ToUpper(),
+            initials = !string.IsNullOrEmpty(yeniYorum.KullaniciAd)
+                ? yeniYorum.KullaniciAd.Substring(0, 1).ToUpper()
+                : "U",
             text = yeniYorum.Metin,
             rating = yeniYorum.Puan,
-            date = yeniYorum.KayitTarihi.ToString("yyyy-MM-ddTHH:mm:sszzz")
+            date = yeniYorum.KayitTarihi.ToString("yyyy-MM-ddTHH:mm:sszzz"),
+            puan = ozet?.puan ?? yeniYorum.Puan,
+            yorumSayisi = ozet?.yorumSayisi ?? 1
         });
     }
 
@@ -102,6 +120,7 @@ public class YorumController : ControllerBase
 
         _context.Yorumlar.Remove(yorum);
         await _context.SaveChangesAsync();
+
         return NoContent();
     }
 
@@ -112,7 +131,8 @@ public class YorumController : ControllerBase
             return BadRequest("Geçersiz veya boş cevap metni.");
 
         var yorum = await _context.Yorumlar.FindAsync(dto.YorumId);
-        if (yorum == null) return NotFound("Cevaplanacak yorum bulunamadı.");
+        if (yorum == null)
+            return NotFound("Cevaplanacak yorum bulunamadı.");
 
         yorum.Cevap = dto.CevapMetni;
         await _context.SaveChangesAsync();
@@ -125,7 +145,7 @@ public class YorumController : ControllerBase
         public int BookId { get; set; }
         public string User { get; set; } = "Anonim Kullanıcı";
         public string Text { get; set; } = string.Empty;
-        public int Rating { get; set; } = 5;
+        public int Rating { get; set; }
     }
 
     public class YorumCevapDto
