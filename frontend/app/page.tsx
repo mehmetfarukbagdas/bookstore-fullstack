@@ -1,4 +1,4 @@
-'use client';
+use client';
 
 import { useMemo, useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -17,7 +17,6 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  
   const categories = [
     { id: 1, name: 'Roman', slug: 'roman' },
     { id: 2, name: 'Bilim Kurgu', slug: 'bilim-kurgu' },
@@ -61,19 +60,19 @@ function HomePage() {
 
   const filteredBooks = useMemo(() => {
     if (!searchQuery) return dbBooks;
-    
+
     const query = String(searchQuery).toLowerCase();
-    
+
     return dbBooks.filter((book) => {
       const title = book.baslik ? String(book.baslik).toLowerCase() : '';
       const author = book.yazar ? String(book.yazar).toLowerCase() : '';
-      
+
       return title.includes(query) || author.includes(query);
     });
   }, [searchQuery, dbBooks]);
 
   const featuredBooks = filteredBooks.slice(0, 8);
-  
+
   const discountedBooks = dbBooks
     .filter((book) => !featuredBooks.some((fb) => (fb.id || fb.Id) === (book.id || book.Id)))
     .slice(0, 4);
@@ -82,7 +81,7 @@ function HomePage() {
     e.preventDefault();
     const element = document.getElementById('kesfet');
     if (element) {
-      const headerOffset = 140; 
+      const headerOffset = 140;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.scrollY - headerOffset;
 
@@ -98,10 +97,10 @@ function HomePage() {
       <Header />
 
       <main className="flex-1">
-        
+
         <section className="bg-primary text-primary-foreground">
           <div className="container mx-auto px-4 py-8 md:py-12">
-            <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
                 <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-balance">
                   Binlerce Kitap, Tek Adreste
@@ -118,13 +117,14 @@ function HomePage() {
                   </Link>
                 </div>
               </div>
-              <div className="hidden md:block relative max-w-sm w-full md:ml-8">
+
+              <div className="relative max-w-[280px] sm:max-w-sm w-full mx-auto md:ml-8 md:mx-0">
                 <div className="grid grid-cols-2 gap-2">
                   {[
                     "/gorseller/kitap1.jpg",
-                    "/gorseller/kitap2.jpg", 
-                    "/gorseller/kitap3.jpg", 
-                    "/gorseller/kitap4.jpg"  
+                    "/gorseller/kitap2.jpg",
+                    "/gorseller/kitap3.jpg",
+                    "/gorseller/kitap4.jpg"
                   ].map((localImageSrc, i) => (
                     <div
                       key={i}
@@ -137,7 +137,7 @@ function HomePage() {
                         alt={`Öne Çıkan Kitap ${i + 1}`}
                         fill
                         className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 200px"
+                        sizes="(max-width: 768px) 45vw, 200px"
                       />
                     </div>
                   ))}
@@ -147,7 +147,6 @@ function HomePage() {
           </div>
         </section>
 
-        
         <section className="py-8 border-b border-border bg-card">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -191,7 +190,6 @@ function HomePage() {
           </div>
         </section>
 
-        
         <section id="kategoriler" className="py-12 md:py-16 scroll-mt-24">
           <div className="container mx-auto px-4">
             <div className="mb-8">
@@ -215,7 +213,6 @@ function HomePage() {
           </div>
         </section>
 
-        
         <section id="kesfet" className="py-12 md:py-16 bg-card scroll-mt-28">
           <div className="container mx-auto px-4">
             <div className="mb-8">
@@ -253,7 +250,6 @@ function HomePage() {
           </div>
         </section>
 
-        
         {discountedBooks.length > 0 && !searchQuery && (
           <section className="py-12 md:py-16 border-t border-gray-100">
             <div className="container mx-auto px-4">
@@ -280,7 +276,6 @@ function HomePage() {
           </section>
         )}
 
-        
         <section className="py-12 md:py-16 bg-secondary">
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center">
