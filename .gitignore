@@ -1,0 +1,65 @@
+# ==========================================
+# C# .NET Backend Bağımlılıkları ve Çıktıları
+# ==========================================
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+**/.vs/
+**/App_Data/
+
+# ==========================================
+# Node.js / Next.js Frontend Bağımlılıkları
+# ==========================================
+**/node_modules/
+**/.next/
+**/out/
+**/build/
+**/dist/
+.npm
+.yarn/
+
+# ==========================================
+# PostgreSQL & Veritabanı Dosyaları
+# ==========================================
+# Eğer Docker ile yerel PostgreSQL kullanıyorsan veri klasörleri repoya gitmemeli
+**/pgdata/
+**/postgres-data/
+# Yerel veritabanı yedekleri, loglar ve dump (çıktı) dosyaları
+*.dump
+*.sql
+*.backup
+*.bak
+*.log
+
+# ==========================================
+# Çevresel Değişkenler ve Gizli Anahtarlar
+# ==========================================
+# DİKKAT: PostgreSQL Connection String (Bağlantı Cümlen) bu dosyalarda yer alacağı için GİZLİ KALMALI
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.secret.*
+
+# ==========================================
+# Yayınlama Servislerinin Yerel Klasörleri (Vercel vb.)
+# ==========================================
+.vercel/
+
+# ==========================================
+# İşletim Sistemi ve Genel Editör Kalıntıları
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# VS Code Ayarları
+.vscode/
+project.assets.json
