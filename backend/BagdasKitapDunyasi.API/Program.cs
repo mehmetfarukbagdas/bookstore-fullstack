@@ -77,7 +77,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowNextApp", policy =>
     {
-        policy.WithOrigins("https://bookstore-fullstack-e8ly.vercel.app")
+        policy.WithOrigins("https://bagdaskitapdunyasi.vercel.app")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
