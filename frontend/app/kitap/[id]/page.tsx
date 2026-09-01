@@ -22,13 +22,13 @@ function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [ayarlar, setAyarlar] = useState({ ucretsizKargoLimiti: 150 });
   const [userComment, setUserComment] = useState("");
-  const [userRating, setUserRating] = useState(5);
+  const [userRating, setUserRating] = useState(0);
   const [comments, setComments] = useState<any[]>([]); 
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastIconColor, setToastIconColor] = useState('text-green-400');
 
-  const apiUrl = "https://bagdas-kitap-api.onrender.com/api";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "https://bagdas-kitap-api.onrender.com/api";
 
   const triggerToast = (message: string, isSuccess: boolean = true) => {
     setToastMessage(message);
@@ -97,7 +97,7 @@ function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
   }, [book, id]);
 
   const handleAddComment = async () => {
-    if (!userComment.trim()) return;
+    if (!userComment.trim() || userRating === 0) return;
 
     try {
       const response = await fetch(`${apiUrl}/Yorum`, {
@@ -124,15 +124,24 @@ function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
         ]);
 
         setUserComment("");
-        setUserRating(5);
+        setUserRating(0);
         
         triggerToast("Yorumunuz başarıyla gönderildi!");
       } else {
-        triggerToast("Yorum kaydedilirken bir hata oluştu.", false);
+        let errorMessage = "Yorum kaydedilirken bir hata oluştu.";
+        try {
+          const errorText = await response.text();
+          if (errorText) errorMessage = errorText;
+        } catch {}
+        triggerToast(errorMessage, false);
       }
     } catch (err) {
       console.error("Yorum gönderilirken hata:", err);
-      triggerToast("Sunucu bağlantısı kurulamadı.", false);
+      console.error("Yorum gönderilirken sunucu hatası:", err);
+      triggerToast(
+        "Sunucuya bağlanılamadı. Render API'nin çalıştığını ve Vercel'deki NEXT_PUBLIC_API_URL ayarını kontrol edin.",
+        false
+      );
     }
   };
 
@@ -370,11 +379,19 @@ function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
                   <div className="space-y-4">
                     <div className="flex gap-1 text-amber-400">
                       {[1,2,3,4,5].map(i => (
-                        <Star key={i} onClick={() => setUserRating(i)} className={`h-6 w-6 cursor-pointer ${i <= userRating ? 'fill-current' : 'opacity-30'}`} />
+                        <Star
+                          key={i}
+                          onClick={() => setUserRating(i)}
+                          className={`h-6 w-6 cursor-pointer transition-colors ${
+                            i <= userRating
+                              ? 'fill-current text-amber-400'
+                              : 'text-muted-foreground/30'
+                          }`}
+                        />
                       ))}
                     </div>
                     <Textarea placeholder="Kitap hakkındaki görüşlerinizi paylaşın..." className="bg-background min-h-[120px] resize-none" value={userComment} onChange={(e) => setUserComment(e.target.value)} />
-                    <Button className="w-full h-11 text-sm font-semibold" disabled={!userComment.trim()} onClick={handleAddComment}>Gönder</Button>
+                    <Button className="w-full h-11 text-sm font-semibold" disabled={!userComment.trim() || userRating === 0} onClick={handleAddComment}>Gönder</Button>
                   </div>
                 </Card>
               </div>
