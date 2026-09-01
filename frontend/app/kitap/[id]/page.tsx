@@ -290,10 +290,22 @@ function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
           </Button>
 
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
-            <div className="relative aspect-[3/4] max-w-md mx-auto lg:mx-0 rounded-lg overflow-hidden bg-secondary">
-              <Image src={image} alt={title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" priority />
-              {discount > 0 && <span className="absolute top-4 left-4 bg-accent text-accent-foreground text-sm font-semibold px-3 py-1.5 rounded shadow-sm">%{discount} indirim</span>}
-            </div>
+            <div className="relative w-full max-w-sm lg:max-w-md mx-auto lg:mx-0 aspect-[3/4] rounded-lg overflow-hidden bg-secondary">
+  <Image
+    src={image}
+    alt={title}
+    fill
+    className="object-cover"
+    sizes="(max-width: 1024px) 100vw, 50vw"
+    priority
+  />
+
+  {discount > 0 && (
+    <span className="absolute top-4 left-4 bg-accent text-accent-foreground text-sm font-semibold px-3 py-1.5 rounded shadow-sm">
+      %{discount} indirim
+    </span>
+  )}
+</div>
 
             <div className="flex flex-col justify-between">
               <div>
