@@ -19,8 +19,8 @@ export default function OdemePage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
-  
-  
+
+
   const [error, setError] = useState<string | null>(null);
 
   const [ayarlar, setAyarlar] = useState({
@@ -56,7 +56,7 @@ export default function OdemePage() {
 
   const handleExpiryChange = (value: string) => {
     // Sadece rakamları al ve MM/YY formatına dönüştür.
-    const digits = value.replace(/\\D/g, "").slice(0, 4);
+    const digits = value.replace(/\D/g, "").slice(0, 4);
 
     if (digits.length <= 2) {
       setExpiry(digits);
@@ -69,7 +69,7 @@ export default function OdemePage() {
   const shipping = subtotal >= ayarlar.ucretsizKargoLimiti ? 0 : ayarlar.kargoUcreti;
   const total = subtotal + shipping;
 
- 
+
   const validateStep = () => {
     setError(null);
 
@@ -79,7 +79,7 @@ export default function OdemePage() {
         return false;
       }
     } else if (step === 2) {
-      const expiryMatch = /^(0[1-9]|1[0-2])\\/\\d{2}$/.test(expiry);
+      const expiryMatch = /^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry);
 
       if (!cardName.trim() || cardNumber.length < 16 || !expiryMatch || cvv.length < 3) {
         setError("Lütfen geçerli ödeme bilgilerini girin.");
@@ -92,7 +92,7 @@ export default function OdemePage() {
   const handleNextStep = () => {
     if (validateStep()) {
       setStep(step + 1);
-      window.scrollTo(0, 0); 
+      window.scrollTo(0, 0);
     }
   };
 
@@ -172,7 +172,7 @@ export default function OdemePage() {
       <Header />
       <main className="flex-1 py-8">
         <div className="container mx-auto px-4">
-          
+
           {/* Uyarı Mesajı */}
           {error && (
             <div className="max-w-4xl mx-auto mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-lg flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
