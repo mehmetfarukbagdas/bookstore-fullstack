@@ -15,30 +15,83 @@ export function BookCard({ book }: { book: any }) {
   const title = b.baslik || b.Baslik || b.title || "İsimsiz Kitap";
   const author = b.yazar || b.Yazar || b.author || "Bilinmeyen Yazar";
   const image = b.resimUrl || b.ResimUrl || b.image || "/gorseller/placeholder.jpg";
-  
+
   const normalFiyat = b.fiyat || b.Fiyat || b.price || 0;
   const indirimliFiyat = b.indirimliFiyat || b.IndirimliFiyat || null;
   const price = indirimliFiyat && indirimliFiyat > 0 ? indirimliFiyat : normalFiyat;
   const originalPrice = indirimliFiyat && indirimliFiyat > 0 ? normalFiyat : 0;
-  
-  const discount = originalPrice > 0 ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0;
-  const rating = b.puan ?? b.rating ?? 0;
-  const reviewCount = b.yorumSayisi ?? b.reviewCount ?? b.degerlendirmeSayisi ?? 0;
 
-  
+  const discount = originalPrice > 0 ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0;
+
+  // API'den gelen alan adları farklı olsa bile puan ve yorum sayısını doğru göster.
+  const reviewList = Array.isArray(b.yorumlar)
+    ? b.yorumlar
+    : Array.isArray(b.Yorumlar)
+      ? b.Yorumlar
+      : Array.isArray(b.reviews)
+        ? b.reviews
+        : Array.isArray(b.Reviews)
+          ? b.Reviews
+          : [];
+
+  const ratingValue =
+    b.puan ??
+    b.Puan ??
+    b.rating ??
+    b.Rating ??
+    b.averageRating ??
+    b.AverageRating ??
+    b.ortalamaPuan ??
+    b.OrtalamaPuan ??
+    b.ratingAverage ??
+    b.RatingAverage;
+
+  const reviewCountValue =
+    b.yorumSayisi ??
+    b.YorumSayisi ??
+    b.reviewCount ??
+    b.ReviewCount ??
+    b.degerlendirmeSayisi ??
+    b.DegerlendirmeSayisi;
+
+  const reviewCount =
+    reviewCountValue != null
+      ? Number(reviewCountValue)
+      : reviewList.length;
+
+  const calculatedRating =
+    ratingValue != null
+      ? Number(ratingValue)
+      : reviewList.length > 0
+        ? reviewList.reduce((sum: number, review: any) => {
+            const value =
+              review.puan ??
+              review.Puan ??
+              review.rating ??
+              review.Rating ??
+              0;
+            return sum + Number(value || 0);
+          }, 0) / reviewList.length
+        : 0;
+
+  const rating = Number.isFinite(calculatedRating)
+    ? Math.round(calculatedRating * 10) / 10
+    : 0;
+
+
   useEffect(() => {
     const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
     setIsFavorite(favs.some((fav: any) => String(fav.id || fav) === String(id)));
   }, [id]);
 
-  
+
   const toggleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
     const exists = favs.some((fav: any) => String(fav.id || fav) === String(id));
-    
+
     if (exists) {
       favs = favs.filter((fav: any) => String(fav.id || fav) !== String(id));
       setIsFavorite(false);
@@ -46,7 +99,7 @@ export function BookCard({ book }: { book: any }) {
       favs.push({ id, baslik: title, resimUrl: image, fiyat: normalFiyat, indirimliFiyat: indirimliFiyat });
       setIsFavorite(true);
     }
-    
+
     localStorage.setItem("favorites", JSON.stringify(favs));
     window.dispatchEvent(new Event("favoritesUpdated"));
   };
@@ -72,7 +125,7 @@ export function BookCard({ book }: { book: any }) {
             alt={title}
             className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
           />
-          
+
           {/* İndirim Rozeti */}
           {discount > 0 && (
             <div className="absolute top-3 left-3 flex flex-col gap-1 z-10">
@@ -94,7 +147,7 @@ export function BookCard({ book }: { book: any }) {
         <p className="text-xs text-gray-500 mb-3 line-clamp-1 italic">
           {author}
         </p>
-        
+
         <div className="flex items-center gap-1.5 mb-4 bg-gray-50 w-fit px-2 py-1 rounded-lg">
           <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
           <span className="text-xs font-black text-gray-700">{rating}</span>
@@ -102,7 +155,7 @@ export function BookCard({ book }: { book: any }) {
         </div>
 
         <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
-          
+
           <div className="flex flex-col">
             {originalPrice > 0 ? (
               <>
@@ -119,12 +172,12 @@ export function BookCard({ book }: { book: any }) {
               </span>
             )}
           </div>
-          
-          
+
+
           <Button
             onClick={(e) => {
               e.preventDefault();
-              
+
               addToCart({
                 ...b,
                 id: id,
