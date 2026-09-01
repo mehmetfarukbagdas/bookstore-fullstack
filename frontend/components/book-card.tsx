@@ -6,7 +6,7 @@ import { ShoppingCart, Star, Heart, TrendingDown } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
 import { Button } from '@/components/ui/button';
 
-export function BookCard({ book }: { book: any }) { 
+export function BookCard({ book }: { book: any }) {
   const { addToCart } = useStore();
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -64,14 +64,14 @@ export function BookCard({ book }: { book: any }) {
       ? Number(ratingValue)
       : reviewList.length > 0
         ? reviewList.reduce((sum: number, review: any) => {
-            const value =
-              review.puan ??
-              review.Puan ??
-              review.rating ??
-              review.Rating ??
-              0;
-            return sum + Number(value || 0);
-          }, 0) / reviewList.length
+          const value =
+            review.puan ??
+            review.Puan ??
+            review.rating ??
+            review.Rating ??
+            0;
+          return sum + Number(value || 0);
+        }, 0) / reviewList.length
         : 0;
 
   const rating = Number.isFinite(calculatedRating)
@@ -107,14 +107,14 @@ export function BookCard({ book }: { book: any }) {
   return (
     <div className="group relative bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
       {/* Favori Butonu */}
-      <button 
+      <button
         onClick={toggleFavorite}
         title={isFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle"}
         aria-label={isFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle"}
         className="absolute top-3 right-3 z-20 p-2.5 rounded-full bg-white/90 backdrop-blur-sm shadow-sm hover:scale-110 transition-transform"
       >
-        <Heart 
-          className={`w-4 h-4 transition-colors ${isFavorite ? "fill-red-500 text-red-500" : "text-gray-400 hover:text-red-500"}`} 
+        <Heart
+          className={`w-4 h-4 transition-colors ${isFavorite ? "fill-red-500 text-red-500" : "text-gray-400 hover:text-red-500"}`}
         />
       </button>
 
