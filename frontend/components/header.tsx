@@ -15,7 +15,6 @@ import {
 import Image from 'next/image';
 import { Search, ShoppingCart, User, Menu, X, ChevronDown, Loader2 } from 'lucide-react';
 
-
 interface UserType {
   ad?: string;
   name?: string;
@@ -42,16 +41,16 @@ const HeartIcon = ({ className }: { className?: string }) => (
 );
 
 const NAV_CATEGORIES = [
-  { label: 'Çok Satanlar',    slug: 'cok-satanlar' },
+  { label: 'Çok Satanlar', slug: 'cok-satanlar' },
   { label: 'Dünya Klasikleri', slug: 'dunya-klasikleri' },
   { label: 'Kampanyalar', slug: 'kampanyalar' },
 ];
 
 const DROPDOWN_CATEGORIES = [
-  { label: 'Roman',           slug: 'roman' },
-  { label: 'Bilim Kurgu',     slug: 'bilim-kurgu' },
-  { label: 'Tarih',           slug: 'tarih' },
-  { label: 'Felsefe',         slug: 'felsefe' },
+  { label: 'Roman', slug: 'roman' },
+  { label: 'Bilim Kurgu', slug: 'bilim-kurgu' },
+  { label: 'Tarih', slug: 'tarih' },
+  { label: 'Felsefe', slug: 'felsefe' },
   { label: 'Kişisel Gelişim', slug: 'kisisel-gelisim' },
 ];
 
@@ -62,7 +61,6 @@ export function Header() {
   const [favCount, setFavCount] = useState(0);
   const searchRef = useRef<HTMLDivElement>(null);
 
- 
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
@@ -90,9 +88,7 @@ export function Header() {
     };
   }, []);
 
-  
   useEffect(() => {
-    
     if (!searchQuery || searchQuery.trim().length < 2) {
       setSuggestions([]);
       setIsSearching(false);
@@ -101,23 +97,21 @@ export function Header() {
 
     setIsSearching(true);
 
-    
     const timeoutId = setTimeout(async () => {
       try {
         const res = await fetch(`https://bagdas-kitap-api.onrender.com/api/Kitap?arama=${searchQuery}`);
         if (res.ok) {
           const data = await res.json();
           const rawBooks = data.data || [];
-          
-          
+
           const mapped = rawBooks.map((b: any) => ({
             id: b.Id || b.id,
             title: b.Baslik || b.baslik || b.title,
             author: b.Yazar || b.yazar || b.author,
             image: b.ResimUrl || b.resimUrl || b.image || '/gorseller/placeholder.jpg',
           }));
-          
-          setSuggestions(mapped.slice(0, 5)); 
+
+          setSuggestions(mapped.slice(0, 5));
         }
       } catch (error) {
         console.error("Arama önerileri alınamadı:", error);
@@ -126,17 +120,17 @@ export function Header() {
       }
     }, 400);
 
-    return () => clearTimeout(timeoutId); 
+    return () => clearTimeout(timeoutId);
   }, [searchQuery]);
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-100 shadow-sm">
       <div className="container mx-auto px-4">
         {/* ÜST KISIM */}
-        <div className="flex h-16 md:h-20 items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-3 shrink-0">
+        <div className="flex h-16 md:h-20 items-center justify-between gap-2 sm:gap-4">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 shrink-0">
             <Image src="/logo.png" width={32} height={32} alt="logo" className="object-contain" />
-            <span className="font-serif text-xl font-bold text-[#4a2e2b] hidden sm:inline">
+            <span className="font-serif text-sm sm:text-xl font-bold text-[#4a2e2b]">
               Bağdaş Kitap Dünyası
             </span>
           </Link>
@@ -156,8 +150,7 @@ export function Header() {
                 onFocus={() => setShowSuggestions(true)}
                 className="pl-10 bg-gray-50 border-gray-200 focus:bg-white focus:border-[#4a2e2b] transition-colors rounded-xl"
               />
-              
-              {/* Akıllı ve Zengin Arama Sonuçları */}
+
               {showSuggestions && searchQuery.length >= 2 && (
                 <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-100 rounded-xl shadow-2xl z-50 overflow-hidden">
                   {isSearching ? (
@@ -173,7 +166,7 @@ export function Header() {
                           className="flex items-center gap-4 px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
                           onClick={() => {
                             setShowSuggestions(false);
-                            setSearchQuery(''); 
+                            setSearchQuery('');
                           }}
                         >
                           <div className="w-10 h-14 bg-gray-100 rounded overflow-hidden shrink-0">
@@ -197,9 +190,9 @@ export function Header() {
           </div>
 
           {/* Sağ İkonlar */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <Link href="/favorilerim">
-              <Button variant="ghost" size="icon" className="relative group hover:bg-[#4a2e2b]/10 rounded-full">
+              <Button variant="ghost" size="icon" className="relative group hover:bg-[#4a2e2b]/10 rounded-full h-9 w-9 sm:h-10 sm:w-10">
                 <HeartIcon className="group-hover:text-red-500 transition-colors text-gray-600" />
                 {favCount > 0 && (
                   <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center font-bold animate-in zoom-in">
@@ -210,33 +203,31 @@ export function Header() {
             </Link>
 
             <Link href="/sepet">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="relative group hover:bg-[#4a2e2b]/10 rounded-full text-gray-600 transition-all"
-            >
-              <ShoppingCart className="h-5 w-5 group-hover:text-[#4a2e2b] transition-colors" />
-              
-    {cartItemCount > 0 && (
-      <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-[#4a2e2b] text-white text-xs flex items-center justify-center font-medium animate-in zoom-in">
-        {cartItemCount}
-      </span>
-    )}
-  </Button>
-</Link>
-            
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative group hover:bg-[#4a2e2b]/10 rounded-full text-gray-600 transition-all h-9 w-9 sm:h-10 sm:w-10"
+              >
+                <ShoppingCart className="h-5 w-5 group-hover:text-[#4a2e2b] transition-colors" />
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-[#4a2e2b] text-white text-xs flex items-center justify-center font-medium animate-in zoom-in">
+                    {cartItemCount}
+                  </span>
+                )}
+              </Button>
+            </Link>
 
             {isAuthenticated ? (
               <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="relative group hover:bg-[#4a2e2b]/10 rounded-full text-gray-600 transition-all"
-                >
-                  <User className="h-5 w-5 group-hover:text-[#4a2e2b] transition-colors" />
-                </Button>
-              </DropdownMenuTrigger>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="relative group hover:bg-[#4a2e2b]/10 rounded-full text-gray-600 transition-all h-9 w-9 sm:h-10 sm:w-10"
+                  >
+                    <User className="h-5 w-5 group-hover:text-[#4a2e2b] transition-colors" />
+                  </Button>
+                </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 mt-2">
                   <div className="flex items-center gap-3 p-3 bg-gray-50/50">
                     <div className="h-10 w-10 rounded-full bg-[#4a2e2b] flex items-center justify-center text-white font-bold text-lg">
@@ -298,7 +289,7 @@ export function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="md:hidden h-9 w-9 sm:h-10 sm:w-10"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
