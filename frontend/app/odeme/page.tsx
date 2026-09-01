@@ -53,6 +53,18 @@ export default function OdemePage() {
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
+
+  const handleExpiryChange = (value: string) => {
+    // Sadece rakamları al ve MM/YY formatına dönüştür.
+    const digits = value.replace(/\\D/g, "").slice(0, 4);
+
+    if (digits.length <= 2) {
+      setExpiry(digits);
+    } else {
+      setExpiry(`${digits.slice(0, 2)}/${digits.slice(2)}`);
+    }
+  };
+
   const subtotal = cart.reduce((sum, item) => sum + item.book.price * item.quantity, 0);
   const shipping = subtotal >= ayarlar.ucretsizKargoLimiti ? 0 : ayarlar.kargoUcreti;
   const total = subtotal + shipping;
@@ -67,7 +79,9 @@ export default function OdemePage() {
         return false;
       }
     } else if (step === 2) {
-      if (!cardName.trim() || cardNumber.length < 16 || !expiry.trim() || cvv.length < 3) {
+      const expiryMatch = /^(0[1-9]|1[0-2])\\/\\d{2}$/.test(expiry);
+
+      if (!cardName.trim() || cardNumber.length < 16 || !expiryMatch || cvv.length < 3) {
         setError("Lütfen geçerli ödeme bilgilerini girin.");
         return false;
       }
@@ -222,7 +236,14 @@ export default function OdemePage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label>Son Kullanma Tarihi</Label>
-                        <Input value={expiry} onChange={(e) => setExpiry(e.target.value)} placeholder="AA/YY" />
+                        <Input
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={5}
+                          value={expiry}
+                          onChange={(e) => handleExpiryChange(e.target.value)}
+                          placeholder="AA/YY"
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label>CVV</Label>
