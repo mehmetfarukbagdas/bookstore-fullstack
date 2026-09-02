@@ -2,7 +2,7 @@
 
 > Next.js, ASP.NET Core ve PostgreSQL ile geliştirilmiş tam kapsamlı bir online kitap satış platformu.
 >
-> 🔗 **[Canlı Demo](https://bookstore-fullstack-e8ly-ml70dp5v4.vercel.app/)**
+> 🔗 **[Canlı Demo](https://bagdaskitapdunyasi.vercel.app/)**
 
 ![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js)
 ![C#](https://img.shields.io/badge/C%23-ASP.NET_Core_8-512BD4?style=flat-square&logo=dotnet)
