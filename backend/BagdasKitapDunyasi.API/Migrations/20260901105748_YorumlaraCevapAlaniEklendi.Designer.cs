@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BagdasKitapDunyası.API.Migrations
+namespace BagdasKitapDunyasi.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260901105748_YorumlaraCevapAlaniEklendi")]
